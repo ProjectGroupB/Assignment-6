@@ -30,9 +30,16 @@ module.exports.init = function() {
   app.use('/', express.static(__dirname + '/../../client'));
   app.use('/public', express.static(__dirname + '/../../public'));
 
+  /* use the listings router for requests to the api */
+  app.use('/api/listings', listingsRouter);
 
   /* use the listings router for requests to the api */
   app.use('*/api/listings', listingsRouter);
+
+  /* server wrapper around Google Maps API to get latitude + longitude coordinates from address */
+  app.post('/api/coordinates', getCoordinates, function(req, res) {
+    res.send(req.results);
+  });
 
   /* go to homepage for all routes not specified */
   app.all('*/*',function (req, res) {
